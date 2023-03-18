@@ -5,6 +5,7 @@
     "sourceMap": true,
     "outDir": "./dist",
     "esModuleInterop": true,
+    "noImplicitAny": false,
     "lib": [
       "dom",
       "dom.iterable",

@@ -4,15 +4,20 @@ This application allows you to manage multiple Instagram Close Friends lists thr
 
 ## Getting Started
 
-To get started with this application, you will need to register your application on the Instagram Developer Portal and obtain an access token with the `user_friends` permission.
+To get started with this application, you create a .env file with your credentials:
 
-## Usage
+```.env
+USERNAME="xxx"
+PASSWORD="***"
+```
 
 Installing the dependencies
 
 ```bash
 yarn
 ```
+
+## Usage
 
 To start the application, run the following commands:
 

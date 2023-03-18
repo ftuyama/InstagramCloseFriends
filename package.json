@@ -6,17 +6,21 @@
   "scripts": {
     "build": "tsc",
     "start": "react-scripts start",
-    "server": "node server/server.ts"
+    "server": "node server/server.js"
   },
   "proxy": "http://localhost:4000",
   "dependencies": {
     "@material-ui/core": "^4.12.4",
+    "apicache": "^1.6.3",
     "axios": "^1.3.4",
     "dotenv": "^16.0.3",
     "instagram-private-api": "^1.45.3",
+    "lodash": "^4.17.21",
+    "morgan": "^1.10.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "^4.0.3",
+    "redis": "^4.6.5",
     "start": "^5.1.0",
     "typescript": "^5.0.2"
   },

@@ -11,18 +11,17 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const List = ({ instagram }) => {
+const UserCard = ({ instagram }) => {
     const classes = useStyles();
     return (
         <Card key={instagram.pk} className={classes.root}>
             <CardHeader
                 avatar={<Avatar alt={instagram.username} src={instagram.profile_picture_url} />}
                 title={instagram.username}
-                imgProps={{ crossOrigin: "anonymous" }}
             />
         </Card>
 
     );
 };
 
-export default List;
+export default UserCard;
