@@ -1,0 +1,35 @@
+{
+  "name": "instagram-close-friends",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "build": "tsc",
+    "start": "react-scripts start",
+    "server": "node server/server.ts"
+  },
+  "proxy": "http://localhost:4000",
+  "dependencies": {
+    "@material-ui/core": "^4.12.4",
+    "axios": "^1.3.4",
+    "dotenv": "^16.0.3",
+    "instagram-private-api": "^1.45.3",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "react-scripts": "^4.0.3",
+    "start": "^5.1.0",
+    "typescript": "^5.0.2"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}
