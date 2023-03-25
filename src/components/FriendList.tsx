@@ -19,11 +19,12 @@ const FriendList = () => {
 
     const handleCreateList = (event) => {
         event.preventDefault();
+        setLoading(true);
 
         // Create a new Close Friends list using the Instagram API
         // Add the new list to the state using setLists()
         setCloseFriends(selectedUsers)
-            .catch(error => console.error(error));
+            .catch(error => console.error(error)).finally(() => setLoading(false))
     };
 
     const handleUserToggle = (user: User) => {
@@ -76,7 +77,7 @@ const FriendList = () => {
                     onChange={searchFriends}
                 />
             </div>
-            <div style={{ height: "400px", overflow: "scroll" }}>
+            <div style={{ padding: '20px 0 40px 0', maxHeight: "400px", overflow: "scroll" }}>
                 {lists && lists.length > 0 && lists.map((user: User) => (
                     <UserItem key={user.pk} user={user} onUserSelect={handleUserToggle} />
                 ))}

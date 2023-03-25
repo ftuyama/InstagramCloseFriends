@@ -10,12 +10,17 @@ const port = 4000;
 const cache = apicache.options({ redisClient: redis.createClient() }).middleware
 
 // use the morgan middleware to log incoming requests
+app.use(express.json());
 app.use(morgan(':date[iso] :method :url :status :res[content-length] - :response-time ms'));
 app.use(cache('2 hours'));
 
 app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "X-Requested-With");
+    res.header("Access-Control-Allow-Headers", "X-Requested-With,content-type");
+    res.header('Access-Control-Allow-Methods', 'POST');
+    res.header('Access-Control-Allow-Credentials', true);
+
+    // Pass to next layer of middleware
     next();
 });
 
@@ -37,6 +42,12 @@ let loggedInUser;
 // Middleware to set headers and handle errors
 const handleRequest = (req, res, callback) => {
     try {
+        console.log(`Received request
+            - HTTP ${req.method}
+            - query: ${JSON.stringify(req.query)}
+            - body: ${JSON.stringify(req.body)}`
+        );
+
         callback(req, res);
     } catch (error) {
         console.error(error);
@@ -45,7 +56,7 @@ const handleRequest = (req, res, callback) => {
 };
 
 // Set up a route to fetch the user's Friends lists
-app.get('/friends', async (req, res) => {
+app.get('/friends', (req, res) => {
     handleRequest(req, res, async () => {
         // Fetch the user's friends lists
         const friendsFeed = ig.feed.accountFollowing(loggedInUser.pk);
@@ -63,12 +74,24 @@ app.get('/friends', async (req, res) => {
     });
 });
 
-// Endpoint to set close friends
-app.post('/close-friends', async (req, res) => {
+// Endpoint to get current close friends
+app.get('/close-friends', (req, res) => {
     handleRequest(req, res, async () => {
-        // Set close friends
-        console.log(req.query.closeFriendsList);
-        await ig.friendship.setCloseFriends(loggedInUser.pk, req.body.closeFriendsList);
+        // Fetch the user's close friends lists
+        const closeFriends = ig.feed.bestFriendships();
+        let friends = await closeFriends.items();
+
+        res.json(friends);
+    });
+});
+
+// Endpoint to set close friends
+app.post('/close-friends', (req, res) => {
+    handleRequest(req, res, async () => {
+        if (req.body && req.body.closeFriendsList) {
+            // Set close friends
+            ig.friendship.setBesties({ add: req.body.closeFriendsList });
+        }
 
         res.sendStatus(200);
     });
