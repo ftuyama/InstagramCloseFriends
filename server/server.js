@@ -55,6 +55,13 @@ const handleRequest = (req, res, callback) => {
     }
 };
 
+// Function to fetch close friends
+const getCloseFriends = async () => {
+    const closeFriends = ig.feed.bestFriendships();
+
+    return closeFriends.items();
+}
+
 // Set up a route to fetch the user's Friends lists
 app.get('/friends', (req, res) => {
     handleRequest(req, res, async () => {
@@ -78,10 +85,7 @@ app.get('/friends', (req, res) => {
 app.get('/close-friends', (req, res) => {
     handleRequest(req, res, async () => {
         // Fetch the user's close friends lists
-        const closeFriends = ig.feed.bestFriendships();
-        let friends = await closeFriends.items();
-
-        res.json(friends);
+        res.json(await getCloseFriends());
     });
 });
 
@@ -89,8 +93,15 @@ app.get('/close-friends', (req, res) => {
 app.post('/close-friends', (req, res) => {
     handleRequest(req, res, async () => {
         if (req.body && req.body.closeFriendsList) {
+            // Get current list of close friends
+            const closeFriends = await getCloseFriends();
+            const closeFriendsIds = closeFriends.map((user) => user.pk);
+
             // Set close friends
-            ig.friendship.setBesties({ add: req.body.closeFriendsList });
+            ig.friendship.setBesties({
+                add: req.body.closeFriendsList,
+                remove: closeFriendsIds,
+            });
         }
 
         res.sendStatus(200);
