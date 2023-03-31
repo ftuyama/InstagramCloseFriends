@@ -21,3 +21,14 @@ export async function setCloseFriends(closeFriendsList) {
         return null;
     }
 }
+
+export async function getCloseFriendsLists() {
+    try {
+        const response = await axios.get(`http://localhost:4000/close-friends`);
+        console.log(`${response.data.length} close friends returned`);
+        return response.data;
+    } catch (error) {
+        console.error(error);
+        return null;
+    }
+}
