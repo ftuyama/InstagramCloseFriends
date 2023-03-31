@@ -12,7 +12,7 @@ const useStyles = makeStyles(theme => ({
       float: 'right',
     },
     userList: {
-        padding: '20px 0 40px 0',
+        margin: '20px 0 40px 0',
         maxHeight: "400px",
         overflow: "scroll"
     }

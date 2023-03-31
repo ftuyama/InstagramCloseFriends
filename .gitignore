@@ -29,3 +29,6 @@ Thumbs.db
 # Ignore editor backup files
 *~
 .#*
+
+# Ignore images
+*.jpg

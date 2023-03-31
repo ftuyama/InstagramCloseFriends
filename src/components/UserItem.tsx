@@ -34,7 +34,7 @@ const UserItem = ({ user, onUserSelect }: UserItemProps) => {
             <Checkbox key={'checkbox' + user.pk} checked={checked} tabIndex={-1} disableRipple />
             <UserCard
                 key={'user' + user.pk}
-                instagram={user}
+                user={user}
             />
         </ListItem>
     );

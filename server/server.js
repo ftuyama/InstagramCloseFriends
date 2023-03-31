@@ -5,8 +5,11 @@ const apicache = require("apicache");
 const morgan = require('morgan');
 const redis = require('redis');
 const { IgApiClient } = require('instagram-private-api');
+const fs = require('fs');
+const https = require('https');
 const app = express();
 const port = 4000;
+const Queue = require('bull');
 const cache = apicache.options({ redisClient: redis.createClient() }).middleware
 
 // use the morgan middleware to log incoming requests
@@ -23,6 +26,9 @@ app.use(function (req, res, next) {
     // Pass to next layer of middleware
     next();
 });
+
+// Create a new queue
+const imageDownloadQueue = new Queue('image download queue');
 
 // Create an instance of the Instagram Private API client
 const ig = new IgApiClient();
@@ -62,6 +68,26 @@ const getCloseFriends = async () => {
     return closeFriends.items();
 }
 
+const saveInstagramPictures = (user) => {
+    const filepath = `./public/instagram/${user.username}.jpg`;
+
+    if (!fs.existsSync(filepath)) {
+        const file = fs.createWriteStream(filepath);
+
+        console.log(`Downloading ${filepath}`);
+
+        // send a request to the server and pipe the response to the file
+        https.get(user.profile_pic_url, (response) => {
+            response.pipe(file);
+        });
+    }
+}
+
+// Process the queued tasks
+imageDownloadQueue.process(async job => {
+    await saveInstagramPictures(job.data.friend);
+});
+
 // Set up a route to fetch the user's Friends lists
 app.get('/friends', (req, res) => {
     handleRequest(req, res, async () => {
@@ -76,6 +102,11 @@ app.get('/friends', (req, res) => {
                 return username.includes(req.query.searchTerm) || full_name.includes(req.query.searchTerm);
             });
         }
+
+        // Queue the task to be executed later
+        friends.forEach(friend => {
+            imageDownloadQueue.add({ friend });
+        });
 
         res.json(friends);
     });
